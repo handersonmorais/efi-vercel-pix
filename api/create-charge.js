@@ -14,7 +14,8 @@ export default async function handler(req, res) {
 
     const credentials = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
 
-    const tokenResponse = await fetch("https://api.efi.com.br/v1/authorize", {
+    // 🔹 CORRIGIDO AQUI:
+    const tokenResponse = await fetch("https://pix.efi.com.br/oauth/token", {
       method: "POST",
       headers: {
         Authorization: `Basic ${credentials}`,
@@ -32,15 +33,18 @@ export default async function handler(req, res) {
 
     const accessToken = tokenData.access_token;
 
-    const chargeResponse = await fetch("https://api.efi.com.br/v1/charges", {
+    // 🔹 CORRIGIDO AQUI:
+    const chargeResponse = await fetch("https://pix.efi.com.br/v2/cob", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        amount: amount || 699,
-        description: description || "Oferta revelada R$6,99",
+        calendario: { expiracao: 600 },
+        valor: { original: (amount / 100).toFixed(2) },
+        chave: "51700dfc-4383-4c2f-a6a6-f1e79b8237a2",
+        solicitacaoPagador: description || "Oferta R$6,99",
       }),
     });
 
