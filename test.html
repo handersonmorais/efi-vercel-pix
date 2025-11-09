@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Teste PIX - Efi Vercel</title>
+  <style>
+    body { font-family: Arial; text-align: center; margin-top: 50px; }
+    #qrcode { margin: 20px; }
+    .copy { background: #222; color: #fff; padding: 10px; border-radius: 8px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>💰 Teste de Pagamento PIX</h1>
+  <p>Valor: <strong>R$6,99</strong></p>
+  <button onclick="criarCobranca()">Gerar PIX</button>
+  <div id="resultado"></div>
+
+  <script>
+    async function criarCobranca() {
+      const res = await fetch('/api/create-charge', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: 699, description: 'Oferta revelada R$6,99' })
+      });
+
+      const data = await res.json();
+      const div = document.getElementById('resultado');
+
+      if (data.qr_code) {
+        div.innerHTML = `
+          <h3>Escaneie o QR Code abaixo (válido por 10 minutos):</h3>
+          <img src="${data.qr_code}" width="250" id="qrcode" /><br/>
+          <div class="copy" onclick="copiar('${data.pix_copy_paste}')">Copiar código PIX</div>
+          <p><small>Pagamento 100% seguro ✅<br/>Garantia incondicional de 7 dias</small></p>
+        `;
+      } else {
+        div.innerHTML = '<p style="color:red;">❌ Erro ao gerar cobrança PIX.</p><pre>' + JSON.stringify(data, null, 2) + '</pre>';
+      }
+    }
+
+    function copiar(texto) {
+      navigator.clipboard.writeText(texto);
+      alert('Código PIX copiado!');
+    }
+  </script>
+</body>
+</html>
