@@ -1,10 +1,8 @@
 {
   "name": "efi-vercel-pix",
   "version": "1.0.0",
-  "description": "Integração de pagamentos PIX via Efi Bank (Gerencianet) hospedada na Vercel",
-  "main": "index.js",
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
-    "axios": "^1.6.0"
+    "node-fetch": "^3.3.2"
   }
 }
