@@ -1,1 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Teste de PIX</title>
+</head>
+<body>
+  <h1>Teste de API PIX</h1>
+  <button id="gerar">Gerar PIX</button>
+  <pre id="resposta"></pre>
+
+  <script>
+    document.getElementById("gerar").onclick = async () => {
+      const resposta = document.getElementById("resposta");
+      resposta.textContent = "Gerando...";
+      try {
+        const r = await fetch("/api/create-charge", { method: "POST" });
+        const j = await r.json();
+        resposta.textContent = JSON.stringify(j, null, 2);
+      } catch (e) {
+        resposta.textContent = e.message;
+      }
+    };
+  </script>
+</body>
+</html>
 
