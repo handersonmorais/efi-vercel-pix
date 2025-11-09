@@ -14,7 +14,11 @@
       const resposta = document.getElementById("resposta");
       resposta.textContent = "Gerando...";
       try {
-        const r = await fetch("/api/create-charge", { method: "POST" });
+        const r = await fetch("/api/create-charge", { 
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ amount: 699, description: "Teste PIX" })
+        });
         const j = await r.json();
         resposta.textContent = JSON.stringify(j, null, 2);
       } catch (e) {
@@ -24,4 +28,3 @@
   </script>
 </body>
 </html>
-
